@@ -2,8 +2,8 @@ on:
     workflow_call:
         inputs:
             branch:
-                description: 'The branch from which the app should be deployed'
-                default: 'main'
+                description: The branch from which the app should be deployed
+                default: main
                 required: false
                 type: string
         secrets:
@@ -22,7 +22,7 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
-                  cache: 'yarn'
+                  cache: yarn
             - run: yarn install --frozen-lockfile
             - run: yarn d2-app-scripts build --standalone
             - id: netlify-deploy
@@ -30,15 +30,15 @@ jobs:
               timeout-minutes: 1
               with:
                   github-token: ${{ secrets.DHIS2_BOT_GITHUB_TOKEN }}
-                  github-deployment-environment: 'netlify'
-                  github-deployment-description: 'Production Deploy on Netlify'
+                  github-deployment-environment: netlify
+                  github-deployment-description: Production Deploy on Netlify
                   deploy-message: Github actions production deploy
                   enable-pull-request-comment: false
                   enable-commit-comment: true
                   enable-commit-status: true
                   production-branch: ${{ inputs.branch }}
                   production-deploy: true
-                  publish-dir: 'build/app'
+                  publish-dir: build/app
               env:
                   NETLIFY_AUTH_TOKEN: ${{ secrets.DHIS2_BOT_NETLIFY_TOKEN }}
                   NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

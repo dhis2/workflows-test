@@ -8,7 +8,7 @@ on:
 
 env:
     GIT_COMMITTER_NAME: '@dhis2-bot'
-    GIT_COMMITTER_EMAIL: 'apps@dhis2.org'
+    GIT_COMMITTER_EMAIL: apps@dhis2.org
 
 jobs:
     release:
@@ -18,7 +18,7 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
-                  cache: 'yarn'
+                  cache: yarn
             - run: yarn install --frozen-lockfile
             - run: yarn d2-app-scripts build
             - uses: dhis2/action-semantic-release@master

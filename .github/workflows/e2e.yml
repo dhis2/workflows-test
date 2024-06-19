@@ -14,11 +14,11 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
-                  cache: 'yarn'
+                  cache: yarn
             - uses: cypress-io/github-action@v6
               with:
                   start: npx --yes @dhis2/cli-cluster up 2.41 --channel dev --db-version 2.41 --seed, yarn start:nobrowser
-                  wait-on: 'http://localhost:8080/dhis-web-commons/security/login.action, http://localhost:3000'
+                  wait-on: http://localhost:8080/dhis-web-commons/security/login.action, http://localhost:3000
                   wait-on-timeout: 600
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

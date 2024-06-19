@@ -9,7 +9,7 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
-                  cache: 'yarn'
+                  cache: yarn
             - run: yarn install --frozen-lockfile
             - id: commitlint
               run: echo ::set-output name=config_path::$(node -e "process.stdout.write(require('@dhis2/cli-style').config.commitlint)")
