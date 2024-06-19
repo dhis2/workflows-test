@@ -1,5 +1,11 @@
 on:
     workflow_call:
+        inputs:
+            backend-version:
+                description: 'The backend version to test against'
+                default: '2.41'
+                required: false
+                type: string
         secrets:
             CYPRESS_LOGIN_NAME:
                 required: true
@@ -17,7 +23,7 @@ jobs:
                   cache: 'yarn'
             - uses: cypress-io/github-action@v6
               with:
-                  start: npx --yes @dhis2/cli-cluster up 2.41 --channel dev --db-version 2.41 --seed, yarn start:nobrowser
+                  start: npx --yes @dhis2/cli-cluster up ${{ inputs.backend-version }} --channel dev --db-version ${{ inputs.backend-version }} --seed, yarn start:nobrowser
                   wait-on: 'http://localhost:8080/dhis-web-commons/security/login.action, http://localhost:3000'
                   wait-on-timeout: 600
               env:
@@ -25,4 +31,4 @@ jobs:
                   CYPRESS_LOGIN_NAME: ${{ secrets.CYPRESS_LOGIN_NAME }}
                   CYPRESS_LOGIN_PASSWORD: ${{ secrets.CYPRESS_LOGIN_PASSWORD }}
                   CYPRESS_LOGIN_SERVER: http://localhost:8080
-            - run: npx --yes @dhis2/cli-cluster down 2.41
+            - run: npx --yes @dhis2/cli-cluster down ${{ inputs.backend-version }}

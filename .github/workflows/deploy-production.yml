@@ -1,5 +1,11 @@
 on:
     workflow_call:
+        inputs:
+            branch:
+                description: 'The branch from which the app should be deployed'
+                default: 'main'
+                required: false
+                type: string
         secrets:
             DHIS2_BOT_GITHUB_TOKEN:
                 required: true
@@ -30,7 +36,7 @@ jobs:
                   enable-pull-request-comment: false
                   enable-commit-comment: true
                   enable-commit-status: true
-                  production-branch: master
+                  production-branch: ${{ inputs.branch }}
                   production-deploy: true
                   publish-dir: 'build/app'
               env:
