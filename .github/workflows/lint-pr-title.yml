@@ -12,5 +12,6 @@ jobs:
                   cache: yarn
             - run: yarn install --frozen-lockfile
             - id: commitlint
-              run: echo ::set-output name=config_path::$(node -e "process.stdout.write(require('@dhis2/cli-style').config.commitlint)")
-            - run: echo "${{ github.event.pull_request.title }}" | npx commitlint --config ${{ steps.commitlint.outputs.config_path }}
+              run: |
+                echo "CONFIG_PATH=$(node -e 'process.stdout.write(require("@dhis2/cli-style").config.commitlint)')" >> "$GITHUB_OUTPUT"
+            - run: echo "${{ github.event.pull_request.title }}" | npx commitlint --config ${{ steps.commitlint.outputs.CONFIG_PATH }}
