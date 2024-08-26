@@ -1,0 +1,23 @@
+on:
+    workflow_call:
+        inputs:
+            api_version:
+                description: The backend api version to test against
+                default: 41
+                required: false
+                type: number
+
+jobs:
+    e2e:
+       runs-on: ubuntu-latest
+           - uses: cypress-io/github-action@v6
+             with:
+                 start: yarn d2-app-scripts start
+                 wait-on: 'http://localhost:3000'
+                 wait-on-timeout: 300
+             env:
+                 BROWSER: none
+                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                 CYPRESS_dhis2BaseUrl: https://debug.dhis2.org/dev
+                 CYPRESS_dhis2ApiVersion: ${{ inputs.api_version }}
+                 CYPRESS_networkMode: stub
