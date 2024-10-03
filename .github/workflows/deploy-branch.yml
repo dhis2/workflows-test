@@ -1,0 +1,43 @@
+on:
+    workflow_call:
+        inputs:
+            branch:
+                description: The branch that should be deployed
+                required: true
+                type: string
+        secrets:
+            DHIS2_BOT_GITHUB_TOKEN:
+                required: true
+            DHIS2_BOT_NETLIFY_TOKEN:
+                required: true
+            NETLIFY_SITE_ID:
+                required: true
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: yarn
+            - run: yarn install --frozen-lockfile
+            - run: yarn d2-app-scripts build --standalone
+            - id: netlify-deploy
+              uses: nwtgck/actions-netlify@v3
+              timeout-minutes: 1
+              with:
+                  github-token: ${{ secrets.DHIS2_BOT_GITHUB_TOKEN }}
+                  github-deployment-environment: netlify
+                  github-deployment-description: Branch Deploy on Netlify
+                  deploy-message: Github actions branch deploy
+                  enable-pull-request-comment: false
+                  enable-commit-comment: true
+                  enable-commit-status: true
+                  production-deploy: false
+                  publish-dir: build/app
+                  alias: ${{ github.ref_name }}
+              env:
+                  NETLIFY_AUTH_TOKEN: ${{ secrets.DHIS2_BOT_NETLIFY_TOKEN }}
+                  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
